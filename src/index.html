@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../assets/outputs.css">
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .head {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 999;
+        }
+    </style>
+    
+</head>
+<body class="bg-black text-white no-scrollbar">
+    <div id="warp" class="overlay hidden">
+        <div class="container mx-auto lg:w-1/3 lg:left-5 sm:left-0 sm:w-full" id="notification">
+            <p id="message" class="mb-2" style="color: black;"></p>
+            <div id="warp-loader" class="hidden">
+                <div class="w-full flex h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
+                    <div id="download-progress" class="flex flex-col justify-center overflow-hidden bg-blue-500"
+                        role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            <button id="restart-button" type="button"
+                class="hidden py-3 px-4 justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800">
+                Restart
+            </button>
+        </div>
+    </div>
+
+    <header class="shadow-xl head px-3 py-2 w-full bg-header" id="move">
+        <h1 class="text-xl font-bold text-lime-400">Alsav Traffic <span id="version"></h1>
+    </header>
+    <div class="md:flex md:flex-row px-3 py-2 gap-4">
+        <div class="md:basis-1/5 border-2 p-2 rounded-xl border-lime-400">
+            <div class="col-span-3">
+                <label class="block mb-1 text-sm font-bold text-white" for="mode_viw">Mode View :</label>
+                <div class="col-span-3">
+                    <div class="flex justify-between mb-2">
+                        <div>
+                            <label for="Page_article" class="block text-xs font-medium text-white">Google Search (KW;URL)</label>
+                        </div>
+                        <div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                              <input type="checkbox" id="google_search" class="sr-only peer" role="switch">
+                              <div class="w-[1.75rem] h-4 bg-gray-400 rounded-full peer peer-focus:ring-4 dark:peer-focus:ring-pink-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-lime-400">
+                            </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <div>
+                            <label for="Page_article" class="block text-xs font-medium text-white">Direct Link (URL)</label>
+                        </div>
+                        <div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                              <input type="checkbox" id="direct_link" class="sr-only peer" role="switch">
+                              <div class="w-[1.75rem] h-4 bg-gray-400 rounded-full peer peer-focus:ring-4 dark:peer-focus:ring-pink-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-lime-400">
+                            </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-3">
+                <label class="block mb-1 text-sm font-bold text-white" for="mode-visit">Mode Visit :</label>
+                <div class="col-span-3">
+                    <div class="flex justify-between mb-2">
+                        <div>
+                            <label for="message" class="block text-xs font-medium text-white">Visit Ads</label>
+                        </div>
+                        <div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="visit_ads" class="sr-only peer" >
+                                <div class="w-[1.75rem] h-4 bg-gray-400 rounded-full peer peer-focus:ring-4 dark:peer-focus:ring-pink-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-lime-400">
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-span-3">
+                    <label class="block mb-1 text-sm font-bold text-white" for="kwurl">Choose file :</label>
+                    <input accept=".txt" required
+                        class="mb-2 block w-full text-sm text-white border border-gray-300 rounded-lg cursor-pointer focus:outline-none"
+                        id="keywordFile" type="file">
+                </div>
+                <div class="mb-3">
+                    <label class="block mb-1 text-sm font-bold text-white" for="captchaApiKey">2CAPTCHA API KEY :</label>
+                    <input
+                      class="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
+                      type="text" id="captchaApiKey" placeholder="Enter 2CAPTCHA API Key" />
+                  </div>
+            </div>
+        </div>
+        <div class="md:basis-1/5 border-2 p-2 rounded-xl border-lime-400">
+            <label class="block mb-1 text-sm font-bold text-white" for="proxy">Proxy :</label>
+            <div class="col-span-3">
+                <div class="flex justify-between mb-2">
+                    <div>
+                        <label for="message" class="block text-xs font-medium text-white">Proxy</label>
+                    </div>
+                    <div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="proxyC" class="sr-only peer" >
+                            <div class="w-[1.75rem] h-4 bg-gray-400 rounded-full peer peer-focus:ring-4 dark:peer-focus:ring-pink-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-lime-400">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-3">
+                <div>
+                    <textarea id="proxy" rows="8"
+                    class="block p-2.5 mb-2 w-full text-sm rounded-lg border focus:outline-none border-gray-300 dark:bg-white text-black"
+                    placeholder="IP:port:username:password"></textarea>
+                </div>
+            </div>
+        </div> 
+        <div class="md:basis-1/5 border-2 p-2 rounded-xl border-lime-400">
+            <label class="block mb-1 text-sm font-bold text-white" for="user_agent">User agent :</label>
+            <div class="col-span-3">
+                <div class="flex justify-between mb-2">
+                    <div>
+                        <label for="message" class="block text-xs font-medium text-white">Desktop</label>
+                    </div>
+                    <div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="desktop" class="sr-only peer" >
+                            <div class="w-[1.75rem] h-4 bg-gray-400 rounded-full peer peer-focus:ring-4 dark:peer-focus:ring-pink-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-lime-400">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-3">
+                <div class="flex justify-between mb-2">
+                    <div>
+                        <label for="message" class="block text-xs font-medium text-white">Android</label>
+                    </div>
+                    <div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="android" class="sr-only peer" >
+                            <div class="w-[1.75rem] h-4 bg-gray-400 rounded-full peer peer-focus:ring-4 dark:peer-focus:ring-pink-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-lime-400">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-3">
+                <div class="flex justify-between mb-2">
+                    <div>
+                        <label for="message" class="block text-xs font-medium text-white">Iphone</label>
+                    </div>
+                    <div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="iphone" class="sr-only peer" >
+                            <div class="w-[1.75rem] h-4 bg-gray-400 rounded-full peer peer-focus:ring-4 dark:peer-focus:ring-pink-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-lime-400">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-3">
+                <div class="flex justify-between mb-2">
+                    <div>
+                        <label for="message" class="block text-xs font-medium text-white">Random</label>
+                    </div>
+                    <div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="random" class="sr-only peer" >
+                            <div class="w-[1.75rem] h-4 bg-gray-400 rounded-full peer peer-focus:ring-4 dark:peer-focus:ring-pink-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-lime-400">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="md:basis-1/5 border-2 p-2 rounded-xl border-lime-400">
+            <label class="block mb-1 text-sm font-bold text-white" for="additional">Additional :</label>
+            <div class="col-span-3">
+                <div class="flex justify-between mb-2">
+                    <div>
+                        <label for="message" class="block text-xs font-medium text-white">Whoer</label>
+                    </div>
+                    <div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="whoer" class="sr-only peer" >
+                            <div class="w-[1.75rem] h-4 bg-gray-400 rounded-full peer peer-focus:ring-4 dark:peer-focus:ring-pink-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-lime-400">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-3">
+                <div class="flex justify-between mb-2">
+                    <div>
+                        <label for="visible_mode" class="block text-xs font-medium text-white">Visible Mode</label>
+                    </div>
+                    <div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="headless" class="sr-only peer" >
+                            <div class="w-[1.75rem] h-4 bg-gray-400 rounded-full peer peer-focus:ring-4 dark:peer-focus:ring-pink-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-lime-400">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-3">
+                <div class="flex justify-between mb-2">
+                    <div>
+                        <label for="message" class="block text-xs font-medium text-white">Recent Post</label>
+                    </div>
+                    <div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="recent_post" class="sr-only peer" >
+                            <div class="w-[1.75rem] h-4 bg-gray-400 rounded-full peer peer-focus:ring-4 dark:peer-focus:ring-pink-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-lime-400">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-3">
+                <div class="flex justify-between items-center mb-2">
+                    <div>
+                        <label for="message" class="block text-xs font-medium text-white">Loop</label>
+                    </div>
+                    <div>
+                        <input type="number" id="loop" class="text-sm text-black rounded-md border border-gray-300 p-1 w-16" value="1000">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="md:basis-1/5 border-2 p-2 rounded-xl border-lime-400">
+            <label class="block mb-1 text-sm font-bold text-white" for="scroll_page">Scroll Page :</label>
+            <div class="col-span-3">
+                <div class="flex justify-between mb-2">
+                    <div>
+                        <label for="message" class="block text-xs font-medium text-white">Article (min-max)</label>
+                    </div>
+                </div>
+                <div>
+                    <input type="number" id="scrollmin" class="text-xs text-black rounded-md border border-gray-300 p-1 w-16" placeholder="Min" value="1">
+                    <input type="number" id="scrollmax" class="text-xs text-black rounded-md border border-gray-300 p-1 w-16" placeholder="Max" value="1">
+                </div>
+            </div>
+            <div class="col-span-3 mt-2">
+                <div class="flex justify-between mb-2">
+                    <div>
+                        <label for="message" class="block text-xs font-medium text-white">Ads (min-max)</label>
+                    </div>
+                </div>
+                <div >
+                    <input type="number" id="scrollminAds" class="text-xs text-black rounded-md border border-gray-300 p-1 w-16" placeholder="Min" value="1">
+                    <input type="number" id="scrollmaxAds" class="text-xs text-black rounded-md border border-gray-300 p-1 w-16" placeholder="Max" value="1">
+                </div>
+            </div>
+        </div>
+       
+    </div>
+    <div class="p-2 ml-5">
+        <button type="button" id="startBot" class=" text-white bg-green-600 hover:bg-green-700 font-medium text-sm px-3 py-2 text-center mr-2 mb-2">Start</button>
+        <button type="button" id="stop" class="text-white bg-red-400 hover:bg-red-600 font-medium text-sm px-3 py-2 text-center mr-2 mb-2">Stop</button>
+    </div>            
+     <div class="md:basis-3/5 p-3">
+        <label for="log" class="block mb-1 text-sm font-medium text-white">Log Script :</label>
+        <div class="relative mb-3" data-te-input-wrapper-init>
+          <textarea readonly
+            class="no-scrollbar log rounded-lg p-2 bg-white text-black text-sm overflow-auto w-full"
+            id="log" rows="7"></textarea>
+        </div>
+      </div>
+    <script>
+        document.getElementById('move').style.webkitAppRegion = 'drag'
+    </script>
+    <script src="../preload.js"></script>
+</body>
+</html>

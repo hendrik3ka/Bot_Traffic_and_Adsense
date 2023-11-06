@@ -1,0 +1,80 @@
+{
+  "name": "trackerset",
+  "productName": "Alsav Traffic",
+  "version": "1.3.0",
+  "description": "Alsav Traffic",
+  "main": "Trackerset.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\"",
+    "build": "npx electron-builder build",
+    "deploy": "electron-builder -p always",
+    "start-electron": "npm run build-electron && npm run start",
+    "dev": "npx tailwindcss -i ./src/style.css -o ./assets/outputs.css --watch"
+  },
+  "author": "Alsav System",
+  "keywords": [],
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.3.1",
+    "electron-reload": "^2.0.0-alpha.1",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-updater": "^6.1.4",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "proxy-chain": "^2.3.0",
+    "puppeteer": "^21.0.2",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-recaptcha": "^3.6.8",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "tw-elements": "^1.0.0-beta3"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.3.0",
+    "@electron-forge/maker-deb": "^6.3.0",
+    "@electron-forge/maker-rpm": "^6.3.0",
+    "@electron-forge/maker-squirrel": "^6.3.0",
+    "@electron-forge/maker-zip": "^6.3.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^6.3.0",
+    "electron": "25.4.0",
+    "electron-builder": "^24.6.3",
+    "tailwindcss": "^3.3.5"
+  },
+  "build": {
+    "appId": "Alsav Traffic",
+    "productName": "Alsav Traffic",
+    "compression": "maximum",
+    "copyright": "Copyrights 2023 Alsav System",
+    "publish": {
+      "provider": "github",
+      "owner": "alsavdev",
+      "repo": "Bot_Traffic_and_Adsense",
+      "private": true
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "./assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "extraFiles": [
+      "extension/spoof",
+      "extension/captcha"
+    ],
+    "files": [
+      "!src/style.css"
+    ]
+  }
+}
