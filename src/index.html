@@ -36,7 +36,7 @@
     </div>
 
     <header class="shadow-xl head px-3 py-2 w-full bg-header" id="move">
-        <h1 class="text-xl font-bold text-lime-400">Alsav Traffic <span id="version"></h1>
+        <h1 class="text-xl font-bold text-lime-400">Alsav Traffic & Adsense <span id="version"></h1>
     </header>
     <div class="md:flex md:flex-row px-3 py-2 gap-4">
         <div class="md:basis-1/5 border-2 p-2 rounded-xl border-lime-400">
@@ -62,6 +62,18 @@
                         <div>
                             <label class="relative inline-flex items-center cursor-pointer">
                               <input type="checkbox" id="direct_link" class="sr-only peer" role="switch">
+                              <div class="w-[1.75rem] h-4 bg-gray-400 rounded-full peer peer-focus:ring-4 dark:peer-focus:ring-pink-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-lime-400">
+                            </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <div>
+                            <label for="anchor_text" class="block text-xs font-medium text-white">Anchor Text</label>
+                        </div>
+                        <div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                              <input type="checkbox" id="anchor_text" class="sr-only peer" role="switch">
                               <div class="w-[1.75rem] h-4 bg-gray-400 rounded-full peer peer-focus:ring-4 dark:peer-focus:ring-pink-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-lime-400">
                             </div>
                             </label>
@@ -201,6 +213,20 @@
             <div class="col-span-3">
                 <div class="flex justify-between mb-2">
                     <div>
+                        <label for="message" class="block text-xs font-medium text-white">Ipsaya</label>
+                    </div>
+                    <div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="ipsaya" class="sr-only peer" >
+                            <div class="w-[1.75rem] h-4 bg-gray-400 rounded-full peer peer-focus:ring-4 dark:peer-focus:ring-pink-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-lime-400">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-3">
+                <div class="flex justify-between mb-2">
+                    <div>
                         <label for="visible_mode" class="block text-xs font-medium text-white">Visible Mode</label>
                     </div>
                     <div>
@@ -266,14 +292,14 @@
     </div>
     <div class="p-2 ml-5">
         <button type="button" id="startBot" class=" text-white bg-green-600 hover:bg-green-700 font-medium text-sm px-3 py-2 text-center mr-2 mb-2">Start</button>
-        <button type="button" id="stop" class="text-white bg-red-400 hover:bg-red-600 font-medium text-sm px-3 py-2 text-center mr-2 mb-2">Stop</button>
+        <button type="button" id="stop" class="text-white bg-red-600 hover:bg-red-700 font-medium text-sm px-3 py-2 text-center mr-2 mb-2">Stop</button>
     </div>            
      <div class="md:basis-3/5 p-3">
         <label for="log" class="block mb-1 text-sm font-medium text-white">Log Script :</label>
         <div class="relative mb-3" data-te-input-wrapper-init>
           <textarea readonly
             class="no-scrollbar log rounded-lg p-2 bg-white text-black text-sm overflow-auto w-full"
-            id="log" rows="7"></textarea>
+            id="log" rows="6"></textarea>
         </div>
       </div>
     <script>

@@ -29,6 +29,7 @@ const { log } = require("console");
 
 const baseUrl = process.env.BASE_URL;
 const ipUrl = process.env.IP_URL;
+const ipSaya = process.env.IP_SAYA;
 const timeout = process.env.TIMEOUT || 3000;
 
 const spoof = path.join(process.cwd(), "extension/spoof/");
@@ -38,7 +39,7 @@ let page;
 let newProxyUrl;
 let stopFlag = false
 
-const startProccess = async (keyword, domain, logToTextarea, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys) => {
+const startProccess = async (keyword, domain, anchor, logToTextarea, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts) => {
     stopFlag = false
     if (captchaApiKeys) {
         p.use(
@@ -118,6 +119,10 @@ if (proxyC) {
         })
 
         await checkErrorPage(logToTextarea)
+       
+        if (ipsayas) {
+            await getipsaya(logToTextarea, proxyC)
+        }
 
         if (whoers) {
             await getIp(logToTextarea, proxyC)
@@ -264,6 +269,148 @@ if (proxyC) {
                 await page.sleep(3000);
             }
         }
+        //logToTextarea(anchor + ' sdsd ' + 'ipsaya ' + ipsayas + 'achortwk ' + anchorTexts)
+        if (anchorTexts) {
+            await page.goto(baseUrl, {
+                waitUntil: 'networkidle2',
+                timeout: 60000
+            })
+    
+            await checkErrorPage(logToTextarea)
+            if (captchaApiKeys) {
+                await page.solveRecaptchas()
+            }
+            await page.sleep(5000)
+    
+            const accept = await page.$('#L2AGLb');
+    
+            if (accept) {
+                logToTextarea("Accept Found ✅");
+                const bahasa = await page.$('#vc3jof');
+                await bahasa.click();
+                await page.waitForSelector('li[aria-label="‪English‬"]');
+                await page.click('li[aria-label="‪English‬"]');
+                await page.sleep(5000)
+                const accept = await page.$('#L2AGLb');
+                await accept.click()
+            } else {
+                logToTextarea("Accept Not Found ❌");
+            }
+    
+            const search = await page.$('[name="q"]')
+            await search.type(keyword, {
+                delay: 60
+            })
+            await search.press('Enter');
+            // const elements = await page.$$('input[name="btnK"]');
+            // if (elements.length > 1) {
+            //     const submit = elements[1];
+            //     await submit.click();
+            // }
+    
+            await page.sleep(5000)
+            if (captchaApiKeys) {
+                await page.solveRecaptchas()
+            }
+    
+            await page.sleep(5000)
+    
+            logToTextarea('Find Article For ' + keyword);
+    
+            const startTime = Date.now();
+            while (Date.now() - startTime < 10000) {
+                await page.evaluate(() => {
+                    window.scrollBy(0, 100);
+                });
+                await page.sleep(5000);
+                await page.evaluate(() => {
+                    window.scrollBy(0, -10);
+                });
+                await page.sleep(3000);
+            }
+    
+            const hrefElements = await page.$$('[href]');
+            const hrefs = await Promise.all(hrefElements.map(element => element.evaluate(node => node.getAttribute('href'))));
+    
+            let linkFound = false;
+    
+            for (const href of hrefs) {
+                if (domain.includes(href)) {
+                    logToTextarea("Article Found ✅");
+                    try {
+                        const element = await page.waitForXPath(`//a[@href="${href}"]`, {
+                            timeout: 10000
+                        });
+                        await element.click();
+                        linkFound = true;
+                        break;
+                    } catch (error) {
+                        logToTextarea(`Error clicking the link: ${error}`);
+                        break;
+                    }
+                }
+            }
+    
+            if (!linkFound) {
+                logToTextarea("Article Not Found ❌: " + domain);
+                await closeClear(proxyC)
+                return
+            }
+    
+            await page.sleep(10000);
+    
+            await page.reload();
+            const startTimes = Date.now();
+            const minsc = scrollmins * 60;
+            const maxsc = scrollmaxs * 60;
+            const timess = Math.floor(Math.random() * (maxsc - minsc + 1)) + 60;
+            const ttltimes = timess / 60;
+            const numb = ttltimes.toString().slice(0,4)
+            const rNumb = parseFloat(numb);
+            logToTextarea("Scrolling page article for random range " + rNumb + " minute 🕐");
+            while (Date.now() - startTimes < timess * 1000) {
+                await page.evaluate(() => {
+                    window.scrollBy(0, 100);
+                });
+                await page.sleep(3000);
+                await page.evaluate(() => {
+                    window.scrollBy(0, -10);
+                });
+                await page.sleep(3000);
+    
+            }
+            // Cari tautan dengan teks tertentu
+            //   const linkTextToFind = domain;
+            const linkElement = await page.$x(`//a[contains(@href, "${anchor}")]`);
+
+            if (linkElement.length > 0) {
+                // Klik tautan jika ditemukan
+                await linkElement[0].click();
+                logToTextarea(anchor + ' ditemukan dan diklik ✅');
+                await page.sleep(30000);
+                const starttTimes = Date.now();
+                const miscs = scrollmins * 60;
+                const maxscs = scrollmaxs * 60;
+                const ttimes = Math.floor(Math.random() * (maxscs - miscs + 1)) + 60;
+                const cossfe = ttimes / 60;
+                const numb = cossfe.toString().slice(0,4)
+                const rNumb = parseFloat(numb);
+                logToTextarea("Scrolling page tautan for random range " + rNumb + " minute 🕐");
+                    while (Date.now() - starttTimes < ttimes * 1000) {
+                        await page.evaluate(() => {
+                            window.scrollBy(0, 100);
+                    });
+                    await page.sleep(3000);
+                    await page.evaluate(() => {
+                        window.scrollBy(0, -10);
+                    });
+                     await page.sleep(3000);
+                }
+            } else {
+                logToTextarea('Tautan tidak ditemukan.');
+            }      
+        }
+
         if (recentPosts) {
             logToTextarea("Klik Recent Posts");
             const postLinks = await page.$$('#recent-posts-2 ul li a');
@@ -568,6 +715,47 @@ const checkErrorPage = async (logToTextarea, proxyC) => {
         await closeClear(proxyC)
     }
 }
+const getipsaya = async (logToTextarea, proxyC) => {
+    try {
+        await page.goto(ipSaya, {
+            waitUntil: "networkidle2",
+            timeout: 60000
+        });
+        await page.waitForSelector("body");
+
+        const accept = await page.$(".fc-button");
+        accept && (await accept.click());
+
+        await page.waitForSelector('input[id="btn-submit"]', {
+            timeout: 60000,
+        });
+
+        const data = await page.$('input[id="btn-submit"]');
+        data && (await data.click());
+        await page.waitForTimeout(3000);
+
+        const datas = await page.$('[name="btn-submit"]');
+        datas && (await datas.click());
+        await page.waitForTimeout(10000);
+        const getPrx = await page.$('#submit-control')
+        const resultPrx = await page.evaluate((e) => e.innerText, getPrx);
+        const splitPrx = resultPrx.split('-')[0]
+        const note = resultPrx.split(',')[0]
+        const stringPrx = splitPrx.toString();
+        await page.sleep(timeout)
+        if (stringPrx == "IYA ") {
+            logToTextarea(note + ' Closing browser and retrying... ❗');
+            await closeClear(proxyC)
+        }else{
+            logToTextarea(note)
+        }
+        
+        
+    } catch (error) {
+        logToTextarea(error)
+        await closeClear(proxyC)
+    }
+};
 
 const getIp = async (logToTextarea, proxyC) => {
     try {
@@ -685,7 +873,7 @@ async function getLinks(page) {
     const randomLink = links[randomIndex];
     await page.goto(randomLink);
   }
-const main = async (logToTextarea, keywordFilePath, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys) => {
+const main = async (logToTextarea, keywordFilePath, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts) => {
     try {
         const data = fs.readFileSync(keywordFilePath, 'utf-8')
         const lines = data.split('\n');
@@ -696,10 +884,10 @@ const main = async (logToTextarea, keywordFilePath, googleSearchs, directLinks, 
 
             for (let y = 0; y < lines.length; y++) {
                 const line = lines[y];
-                const [keyword, domain, ] = line.trim().split(';');
+                const [keyword, domain, anchor] = line.trim().split(';');
 
                 logToTextarea("Thread #" + (y + 1));
-                await startProccess(keyword, domain, logToTextarea, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys);
+                await startProccess(keyword, domain, anchor, logToTextarea, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts);
                 if (stopFlag) {
                     logToTextarea("Stop the proccess success")
                     break

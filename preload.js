@@ -26,7 +26,9 @@ const version = document.getElementById('version')
 const warp = document.getElementById('warp');
 const message = document.getElementById('message');
 const restartButton = document.getElementById('restart-button');
-const loaderDownload = document.getElementById('warp-loader')
+const loaderDownload = document.getElementById('warp-loader');
+const ipsaya = document.getElementById('ipsaya');
+const anchorText =document.getElementById('anchor_text');
 
 document.addEventListener('change', () => {
   if (proxyCheckBox.checked) {
@@ -64,18 +66,16 @@ startButton.addEventListener('click', () => {
   const scrollminAdss = scrollminAds.value
   const scrollmaxAdss = scrollmaxAds.value
   const captchaApiKeys = captchaApiKey.value
+  const ipsayas = ipsaya.checked
+  const anchorTexts =anchorText.checked
   
-  ipcRenderer.send('button-click', keywordFilePath, googleSearchs, directLinks, visitAdss,  proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys);
+  ipcRenderer.send('button-click', keywordFilePath, googleSearchs, directLinks, visitAdss,  proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts);
 });
 stopButton.addEventListener('click', () => {
   if (confirm("Realy want to stop the proccess ?") == true) {
       ipcRenderer.send('stop');
   }
 });
-
-// reload.addEventListener('click', () => {
-//   ipcRenderer.send('reload')
-// })
 
 ipcRenderer.on('log', (event, logs) => {
   const logTextarea = document.getElementById('log');
@@ -104,6 +104,8 @@ scrollmax,
 scrollminAds,
 scrollmaxAds,
 captchaApiKey,
+ipsaya,
+anchorText,
 ]
 
 ipcRenderer.on('run',()=>{

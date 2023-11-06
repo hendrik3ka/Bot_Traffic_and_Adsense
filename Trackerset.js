@@ -20,8 +20,8 @@ function createWindow() {
     height: 660,
     titleBarStyle: 'hidden', 
     titleBarOverlay: {
-      color: '#fffff',
-      symbolColor: '#3b71ca'
+      color: '#000000',
+      symbolColor: '#7FFF00'
     },
     // resizable: false,
     icon: path.join(__dirname, './assets/icon.ico'),
@@ -65,7 +65,7 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on('button-click', async (event, keywordFilePath, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys) => {
+ipcMain.on('button-click', async (event, keywordFilePath, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts) => {
   const logs = [];
 
   const logToTextarea = (message) => {
@@ -77,7 +77,7 @@ ipcMain.on('button-click', async (event, keywordFilePath, googleSearchs, directL
   try {
     logToTextarea('Process started...');
     event.sender.send('run')
-    await main(logToTextarea, keywordFilePath, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys);
+    await main(logToTextarea, keywordFilePath, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts);
     logToTextarea('Process completed successfully.');
     event.sender.send('foor')
   } catch (error) {
