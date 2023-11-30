@@ -21,7 +21,7 @@ function createWindow() {
     titleBarStyle: 'hidden', 
     titleBarOverlay: {
       color: '#000000',
-      symbolColor: '#7FFF00'
+      symbolColor: '#FF8C00'
     },
     // resizable: false,
     icon: path.join(__dirname, './assets/icon.ico'),

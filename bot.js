@@ -89,18 +89,21 @@ if (proxyC) {
     }
    
     
+    const UserAgent = require('user-agents')  
     if (desktops) {
-        const randomAgent = randomListDesktop();
-        await page.setUserAgent(randomAgent);
+        const userAgent = new UserAgent({
+            deviceCategory:  'desktop'
+        });
+        await page.setUserAgent(userAgent.toString());
     }else if (androids) {
         const randomAgent = randomListAndroid();
         await page.setUserAgent(randomAgent);
     }else if (iphones) {
-        const randomAgent = randomListIphone();
-        await page.setUserAgent(randomAgent);
+        const userAgent = new UserAgent({ platform: 'iPhone' });
+        await page.setUserAgent(userAgent.toString());
     }else if (randoms) {
-        const randomAgent = randomListUser();
-        await page.setUserAgent(randomAgent);
+        const userAgent = new UserAgent().random();
+        await page.setUserAgent(userAgent.toString());
     }
    
 
@@ -167,7 +170,22 @@ if (proxyC) {
     
             await page.sleep(5000)
             if (captchaApiKeys) {
+                logToTextarea("Solve Recaptchas")
                 await page.solveRecaptchas()
+            }else{
+                try {
+                    await page.waitForSelector('#captcha-form');
+                    const tesElement = await page.$('#captcha-form');
+                    if (tesElement !== null) {
+                    logToTextarea('Captcha Closing browser and retrying... ❗');
+                    await closeClear(proxyC)
+                    return
+                    } else {
+                    logToTextarea('No Captcha');
+                    }  
+                } catch (error) {
+                    logToTextarea('No Captcha');
+                }
             }
     
             await page.sleep(5000)
@@ -215,59 +233,45 @@ if (proxyC) {
             }
     
             await page.sleep(10000);
-    
-            await page.reload();
-            const startTimes = Date.now();
-            const minsc = scrollmins * 60;
-            const maxsc = scrollmaxs * 60;
-            const timess = Math.floor(Math.random() * (maxsc - minsc + 1)) + 60;
-            const ttltimes = timess / 60;
-            const numb = ttltimes.toString().slice(0,4)
-            const rNumb = parseFloat(numb);
-            logToTextarea("Scrolling page article for random range " + rNumb + " minute 🕐");
-            while (Date.now() - startTimes < timess * 1000) {
-                await page.evaluate(() => {
-                    window.scrollBy(0, 100);
-                });
-                await page.sleep(3000);
-                await page.evaluate(() => {
-                    window.scrollBy(0, -10);
-                });
-                await page.sleep(3000);
-    
+            try {
+                await page.reload();
+                await page.sleep(10000);
+            } catch (error) {
+                await page.sleep(30000);
+                await page.evaluate(() => window.stop());
             }
+           
+            await autoScroll(page, scrollmins, scrollmaxs, logToTextarea)
         }
 
         if (directLinks) {
             try {
-                await page.goto(keyword, { timeout: 10000 });
+                await page.goto(keyword, { waitUntil: ['domcontentloaded', "networkidle2"],
+                timeout: 120000 });
+             } catch (error) {
+               if (error.name === "TimeoutError") {                
+               //await page.reload();
+               await page.evaluate(() => window.stop());
+               //page.sleep(10000)
+               } else {
+                 // Handle other errors
+                 logToTextarea("An error occurred:", error);
+               }
+            }
+            await page.sleep(10000);
+            try {
+                await page.reload();
+                await page.sleep(10000);
               } catch (error) {
                 if (error.name === "TimeoutError") {
-                  await page.reload();
+                await page.evaluate(() => window.stop());
                 } else {
                   logToTextarea("An error occurred:", error);
                 }
               }
             logToTextarea("Go to " + keyword);
             await page.sleep(30000);
-            const startTimes = Date.now();
-            const minsc = scrollmins * 60;
-            const maxsc = scrollmaxs * 60;
-            const timess = Math.floor(Math.random() * (maxsc - minsc + 1)) + 60;
-            const ttltimes = timess / 60;
-            const numb = ttltimes.toString().slice(0,4)
-            const rNumb = parseFloat(numb);
-            logToTextarea("Scrolling page article for random range " + rNumb + " minute 🕐");
-            while (Date.now() - startTimes < timess * 1000) {
-                await page.evaluate(() => {
-                    window.scrollBy(0, 100);
-                });
-                await page.sleep(3000);
-                await page.evaluate(() => {
-                    window.scrollBy(0, -10);
-                });
-                await page.sleep(3000);
-            }
+            await autoScroll(page, scrollmins, scrollmaxs, logToTextarea)
         }
         //logToTextarea(anchor + ' sdsd ' + 'ipsaya ' + ipsayas + 'achortwk ' + anchorTexts)
         if (anchorTexts) {
@@ -310,7 +314,22 @@ if (proxyC) {
     
             await page.sleep(5000)
             if (captchaApiKeys) {
+                logToTextarea("Solve Recaptchas")
                 await page.solveRecaptchas()
+            }else{
+                try {
+                    await page.waitForSelector('#captcha-form');
+                    const tesElement = await page.$('#captcha-form');
+                    if (tesElement !== null) {
+                    logToTextarea('Captcha Closing browser and retrying... ❗');
+                    await closeClear(proxyC)
+                    return
+                    } else {
+                    logToTextarea('No Captcha');
+                    }  
+                } catch (error) {
+                    logToTextarea('No Captcha');
+                }
             }
     
             await page.sleep(5000)
@@ -359,26 +378,16 @@ if (proxyC) {
     
             await page.sleep(10000);
     
-            await page.reload();
-            const startTimes = Date.now();
-            const minsc = scrollmins * 60;
-            const maxsc = scrollmaxs * 60;
-            const timess = Math.floor(Math.random() * (maxsc - minsc + 1)) + 60;
-            const ttltimes = timess / 60;
-            const numb = ttltimes.toString().slice(0,4)
-            const rNumb = parseFloat(numb);
-            logToTextarea("Scrolling page article for random range " + rNumb + " minute 🕐");
-            while (Date.now() - startTimes < timess * 1000) {
-                await page.evaluate(() => {
-                    window.scrollBy(0, 100);
-                });
-                await page.sleep(3000);
-                await page.evaluate(() => {
-                    window.scrollBy(0, -10);
-                });
-                await page.sleep(3000);
-    
+            try {
+                await page.reload();
+                await page.sleep(10000);
+            } catch (error) {
+                await page.sleep(30000);
+                await page.evaluate(() => window.stop());
             }
+           
+            await autoScroll(page, scrollmins, scrollmaxs, logToTextarea)
+            
             // Cari tautan dengan teks tertentu
             //   const linkTextToFind = domain;
             const linkElement = await page.$x(`//a[contains(@href, "${anchor}")]`);
@@ -412,33 +421,18 @@ if (proxyC) {
         }
 
         if (recentPosts) {
+            page.sleep(30000)
             logToTextarea("Klik Recent Posts");
             const postLinks = await page.$$('#recent-posts-2 ul li a');
             const randomIndex = Math.floor(Math.random() * postLinks.length);
             const randomLink = postLinks[randomIndex];
-            await page.waitForTimeout(500);
-            randomLink.click(),
-            page.sleep(30000)
+            page.sleep(10000)
+            const linkUrl = await page.evaluate(link => link.href, randomLink);
+            // logToTextarea('Url Recent Posts : ' + linkUrl)
+            await page.goto(linkUrl, { waitUntil: ['domcontentloaded', "networkidle2"],
+            timeout: 120000 });
             logToTextarea("Klik Recent Posts Found ✅");
-            //await page.reload();
-            const starttTimes = Date.now();
-            const miscs = scrollmins * 60;
-            const maxscs = scrollmaxs * 69;
-            const ttimes = Math.floor(Math.random() * (maxscs - miscs + 1)) + 60;
-            const cossfe = ttimes / 60;
-            const numb = cossfe.toString().slice(0,4)
-            const rNumb = parseFloat(numb);
-            logToTextarea("Scrolling page article for random range " + rNumb + " minute 🕐");
-            while (Date.now() - starttTimes < ttimes * 1000) {
-                await page.evaluate(() => {
-                    window.scrollBy(0, 100);
-                });
-                await page.sleep(3000);
-                await page.evaluate(() => {
-                    window.scrollBy(0, -10);
-                });
-                await page.sleep(3000);
-            }
+           await autoScroll(page, scrollmins, scrollmaxs, logToTextarea)
         }
 
         if (visitAdss) {
@@ -497,24 +491,7 @@ if (proxyC) {
 
                         await page.waitForTimeout(30000)
                         logToTextarea("Klik Adds Found ✅");
-
-                        const startTimes = Date.now();
-                        const minsc = scrollminAdss * 60;
-                        const maxsc = scrollmaxAdss * 60;
-                        const timess = Math.floor(Math.random() * (maxsc - minsc + 1)) + 60;
-                        const ttltimes = timess / 60;
-                        logToTextarea("Scrolling page ads for random range " + ttltimes + " minute 🕐");
-                        while (Date.now() - startTimes < timess * 1000) {
-                            await page.evaluate(() => {
-                                window.scrollBy(0, 100);
-                            });
-                            await page.sleep(3000);
-                            await page.evaluate(() => {
-                                window.scrollBy(0, -10);
-                            });
-                            await page.sleep(3000);
-
-                        }
+                        await autoScrolladds(page, scrollminAdss, scrollmaxAdss, logToTextarea)
 
                     } else if (adsClickTwo) {
 
@@ -553,23 +530,7 @@ if (proxyC) {
                         await page.waitForTimeout(30000)
                         logToTextarea("Klik Adds Found ✅");
 
-                        const startTimes = Date.now();
-                        const minsc = scrollminAdss * 60;
-                        const maxsc = scrollmaxAdss * 60;
-                        const timess = Math.floor(Math.random() * (maxsc - minsc + 1)) + 60;
-                        const ttltimes = timess / 60;
-                        logToTextarea("Scrolling page ads for random range " + ttltimes + " minute 🕐");
-                        while (Date.now() - startTimes < timess * 1000) {
-                            await page.evaluate(() => {
-                                window.scrollBy(0, 100);
-                            });
-                            await page.sleep(3000);
-                            await page.evaluate(() => {
-                                window.scrollBy(0, -10);
-                            });
-                            await page.sleep(3000);
-
-                        }
+                        await autoScrolladds(page, scrollminAdss, scrollmaxAdss, logToTextarea)
 
                     } else if (adsImageManeh) {
 
@@ -606,24 +567,8 @@ if (proxyC) {
                         }
 
                         await page.waitForTimeout(30000)
-
-                        const startTimes = Date.now();
-                        const minsc = scrollminAdss * 60;
-                        const maxsc = scrollmaxAdss * 60;
-                        const timess = Math.floor(Math.random() * (maxsc - minsc + 1)) + 60;
-                        const ttltimes = timess / 60;
-                        logToTextarea("Scrolling page ads for random range " + ttltimes + " minute 🕐");
-                        while (Date.now() - startTimes < timess * 1000) {
-                            await page.evaluate(() => {
-                                window.scrollBy(0, 100);
-                            });
-                            await page.sleep(3000);
-                            await page.evaluate(() => {
-                                window.scrollBy(0, -10);
-                            });
-                            await page.sleep(3000);
-
-                        }
+                        logToTextarea("Klik Adds Found ✅");
+                        await autoScrolladds(page, scrollminAdss, scrollmaxAdss, logToTextarea)
 
                     } else if (adsImageManehEu) {
 
@@ -661,24 +606,7 @@ if (proxyC) {
 
                         await page.waitForTimeout(30000)
                         logToTextarea("Klik Adds Found ✅");
-
-                        const startTimes = Date.now();
-                        const minsc = scrollminAdss * 60;
-                        const maxsc = scrollmaxAdss * 60;
-                        const timess = Math.floor(Math.random() * (maxsc - minsc + 1)) + 60;
-                        const ttltimes = timess / 60;
-                        logToTextarea("Scrolling page ads for random range " + ttltimes + " minute 🕐");
-                        while (Date.now() - startTimes < timess * 1000) {
-                            await page.evaluate(() => {
-                                window.scrollBy(0, 100);
-                            });
-                            await page.sleep(3000);
-                            await page.evaluate(() => {
-                                window.scrollBy(0, -10);
-                            });
-                            await page.sleep(3000);
-
-                        }
+                        await autoScrolladds(page, scrollminAdss, scrollmaxAdss, logToTextarea)
                     }
                 }
             } else {
@@ -714,6 +642,50 @@ const checkErrorPage = async (logToTextarea, proxyC) => {
         logToTextarea("Error can't be reached");
         await closeClear(proxyC)
     }
+}
+async function autoScroll(page, scrollmins, scrollmaxs, logToTextarea) {
+    const startTimes = Date.now();
+    const min = parseInt(scrollmins);
+    const max = parseInt(scrollmaxs);
+    const duration = Math.round(Math.random() * (max-min)) + min;
+    const sleepDuration = duration * 60 * 1000;
+    const convertMinutes = Math.floor((sleepDuration / 1000 / 60) % 60);
+    logToTextarea("Scrolling page  for random range " + convertMinutes + " minute 🕐");
+        while (Date.now() - startTimes < sleepDuration) {
+            await page.evaluate(() => {
+            window.scrollBy(0, 100);
+        });
+        await page.sleep(3000);
+        await page.evaluate(() => {
+            window.scrollBy(0, -10);
+        });
+        await page.sleep(3000);
+    }
+    logToTextarea('Scrolling page ✅')
+}
+async function autoScrolladds(page, scrollminAdss, scrollmaxAdss, logToTextarea) {
+    try {
+    const startTimes = Date.now();
+    const min = parseInt(scrollminAdss);
+    const max = parseInt(scrollmaxAdss);
+    const duration = Math.round(Math.random() * (max-min)) + min;
+    const sleepDuration = duration * 60 * 1000;
+    const convertMinutes = Math.floor((sleepDuration / 1000 / 60) % 60);
+    logToTextarea("Scrolling page adds  for random range " + convertMinutes + " minute 🕐");
+      while (Date.now() - startTimes < sleepDuration) {
+          await page.evaluate(() => {
+          window.scrollBy(0, 300);
+          });
+          await page.waitForTimeout(2000);
+          await page.evaluate(() => {
+              window.scrollBy(0, -210);
+          });
+          await page.waitForTimeout(2000);
+      }
+      logToTextarea('Scrolling page adds ✅')
+    } catch (error) {
+      logToTextarea('Scrolling page adds Not Found ❌')
+    }  
 }
 const getipsaya = async (logToTextarea, proxyC) => {
     try {

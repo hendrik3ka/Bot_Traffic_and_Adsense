@@ -153,3 +153,5 @@ restartButton.addEventListener("click", (e) => {
     ipcRenderer.send('restart_app');
 })
 
+
+
