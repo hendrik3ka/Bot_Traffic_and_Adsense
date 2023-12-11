@@ -33,6 +33,7 @@ const ipSaya = process.env.IP_SAYA;
 const timeout = process.env.TIMEOUT || 3000;
 
 const spoof = path.join(process.cwd(), "extension/spoof/");
+const UserAgent = require('user-agents') 
 
 let browser;
 let page;
@@ -62,12 +63,32 @@ if (proxyC) {
  rproxy = `${reachedproxy[0]}:${reachedproxy[1]}`
  logToTextarea('proxy : ' + reachedproxy[0])
 }
+let userAgent;
+    if (desktops) {
+         userAgent = new UserAgent({ deviceCategory:  'desktop' });
+        // await page.setUserAgent(userAgent.toString());
+    }else if (androids) {
+      // userAgent = new UserAgent({ deviceCategory: 'mobile' });
+      userAgent = new UserAgent({ deviceCategory: 'mobile' });
+        // await page.setUserAgent(userAgent.toString());
+    }else if (iphones) {
+      userAgent = new UserAgent({ platform: 'iPhone' });
+        // await page.setUserAgent(userAgent.toString());
+    }else if (randoms) {
+      userAgent = new UserAgent().random();
+        // await page.setUserAgent(userAgent.toString());
+    }else if (tablets){
+      userAgent = new UserAgent({ deviceCategory: 'tablet' });
+    }else{
+      userAgent = new UserAgent().random();
+    }
     const options = {
         ignoreHTTPSErrors: true,
         defaultViewport: null,
         args: [
             proxyC ? `--proxy-server=${rproxy}` : null,
             `--load-extension=${spoof}`,
+            `--user-agent=${userAgent.toString()}`,
             // `--disable-extensions-except=${spoof}`,
             "--disable-dev-shm-usage",
             "--no-sandbox",
@@ -87,25 +108,6 @@ if (proxyC) {
     if (proxyC) {
         await page.authenticate({username: `${reachedproxy[2]}`,password: `${reachedproxy[3]}`}); 
     }
-   
-    
-    const UserAgent = require('user-agents')  
-    if (desktops) {
-        const userAgent = new UserAgent({
-            deviceCategory:  'desktop'
-        });
-        await page.setUserAgent(userAgent.toString());
-    }else if (androids) {
-        const randomAgent = randomListAndroid();
-        await page.setUserAgent(randomAgent);
-    }else if (iphones) {
-        const userAgent = new UserAgent({ platform: 'iPhone' });
-        await page.setUserAgent(userAgent.toString());
-    }else if (randoms) {
-        const userAgent = new UserAgent().random();
-        await page.setUserAgent(userAgent.toString());
-    }
-   
 
     page.sleep = function (timeout) {
         return new Promise(function (resolve) {
@@ -693,21 +695,29 @@ const getipsaya = async (logToTextarea, proxyC) => {
             waitUntil: "networkidle2",
             timeout: 60000
         });
+        try {
+          await page.waitForTimeout(10000);
+          await page.waitForSelector("body > div.fc-consent-root > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-choice-dialog-header > button", {timeout: 10000,});
+          await page.click("body > div.fc-consent-root > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-choice-dialog-header > button");
+          logToTextarea('Pop up Found ✅');
+        } catch (error) {
+          logToTextarea('No pop up');
+        }
         await page.waitForSelector("body");
-
+  
         const accept = await page.$(".fc-button");
         accept && (await accept.click());
-
+  
         await page.waitForSelector('input[id="btn-submit"]', {
             timeout: 60000,
         });
-
+  
         const data = await page.$('input[id="btn-submit"]');
         data && (await data.click());
-        await page.waitForTimeout(3000);
-
-        const datas = await page.$('[name="btn-submit"]');
-        datas && (await datas.click());
+        await page.waitForTimeout(40000);
+  
+        const datas = await page.$$('[name="btn-submit"]');
+        datas.length > 0 && (await datas[0].click());
         await page.waitForTimeout(10000);
         const getPrx = await page.$('#submit-control')
         const resultPrx = await page.evaluate((e) => e.innerText, getPrx);
@@ -715,8 +725,8 @@ const getipsaya = async (logToTextarea, proxyC) => {
         const note = resultPrx.split(',')[0]
         const stringPrx = splitPrx.toString();
         await page.sleep(timeout)
-        if (stringPrx == "IYA ") {
-            logToTextarea(note + ' Closing browser and retrying... ❗');
+        if (stringPrx !== "TIDAK ") {
+            logToTextarea('IP yang anda gunakan terindikasi menggunakan VPN atau Proxy Closing browser and retrying... ❗');
             await closeClear(proxyC)
         }else{
             logToTextarea(note)
