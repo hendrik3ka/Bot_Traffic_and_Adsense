@@ -65,7 +65,7 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on('button-click', async (event, keywordFilePath, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts) => {
+ipcMain.on('button-click', async (event, keywordFilePath, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts, iphubs, tablets) => {
   const logs = [];
 
   const logToTextarea = (message) => {
@@ -77,7 +77,7 @@ ipcMain.on('button-click', async (event, keywordFilePath, googleSearchs, directL
   try {
     logToTextarea('Process started...');
     event.sender.send('run')
-    await main(logToTextarea, keywordFilePath, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts);
+    await main(logToTextarea, keywordFilePath, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts, iphubs, tablets);
     logToTextarea('Process completed successfully.');
     event.sender.send('foor')
   } catch (error) {

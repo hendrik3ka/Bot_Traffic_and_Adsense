@@ -30,6 +30,7 @@ const { log } = require("console");
 const baseUrl = process.env.BASE_URL;
 const ipUrl = process.env.IP_URL;
 const ipSaya = process.env.IP_SAYA;
+const ipHub = process.env.IP_HUB;
 const timeout = process.env.TIMEOUT || 3000;
 
 const spoof = path.join(process.cwd(), "extension/spoof/");
@@ -40,7 +41,7 @@ let page;
 let newProxyUrl;
 let stopFlag = false
 
-const startProccess = async (keyword, domain, anchor, logToTextarea, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts) => {
+const startProccess = async (keyword, domain, anchor, logToTextarea, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts, iphubs, tablets) => {
     stopFlag = false
     if (captchaApiKeys) {
         p.use(
@@ -128,7 +129,10 @@ let userAgent;
         if (ipsayas) {
             await getipsaya(logToTextarea, proxyC)
         }
-
+        if (iphubs) {
+            await getipHub(logToTextarea, proxyC)
+        }
+        
         if (whoers) {
             await getIp(logToTextarea, proxyC)
         }
@@ -172,7 +176,17 @@ let userAgent;
     
             await page.sleep(5000)
             if (captchaApiKeys) {
-                logToTextarea("Solve Recaptchas")
+                try {
+                    await page.waitForSelector('#captcha-form');
+                    const tesElement = await page.$('#captcha-form');
+                    if (tesElement !== null) {
+                    logToTextarea("Solve Recaptchas")
+                    } else {
+                    logToTextarea('No Captcha');
+                    }  
+                } catch (error) {
+                    logToTextarea('No Captcha');
+                }
                 await page.solveRecaptchas()
             }else{
                 try {
@@ -738,7 +752,30 @@ const getipsaya = async (logToTextarea, proxyC) => {
         await closeClear(proxyC)
     }
 };
+const getipHub = async (logToTextarea, proxyC) => {
+    try {
+        await page.goto(ipHub, {
+            waitUntil: "networkidle2",
+            timeout: 60000
+        });
+        await page.waitForTimeout(9000);
+        const getPrx = await page.$('#countryName')
+        const geetd = await page.$('#type')
+        const negara = await page.evaluate((e) => e.innerText, getPrx);
+        const status = await page.evaluate((e) => e.innerText, geetd);
+        if (status == "Good IP (residential or business)") {
+        logToTextarea(status);
+        logToTextarea('Country : ' + negara);
+        }else{
+        logToTextarea(status + 'Closing browser and retrying... ❗');
+        await closeClear(proxyC)
+        }
 
+    } catch (error) {
+        logToTextarea(error)
+        await closeClear(proxyC)
+    }
+};
 const getIp = async (logToTextarea, proxyC) => {
     try {
         await page.goto(ipUrl, {
@@ -855,7 +892,7 @@ async function getLinks(page) {
     const randomLink = links[randomIndex];
     await page.goto(randomLink);
   }
-const main = async (logToTextarea, keywordFilePath, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts) => {
+const main = async (logToTextarea, keywordFilePath, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts, iphubs, tablets) => {
     try {
         const data = fs.readFileSync(keywordFilePath, 'utf-8')
         const lines = data.split('\n');
@@ -869,7 +906,7 @@ const main = async (logToTextarea, keywordFilePath, googleSearchs, directLinks, 
                 const [keyword, domain, anchor] = line.trim().split(';');
 
                 logToTextarea("Thread #" + (y + 1));
-                await startProccess(keyword, domain, anchor, logToTextarea, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts);
+                await startProccess(keyword, domain, anchor, logToTextarea, googleSearchs, directLinks, visitAdss, proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts, iphubs, tablets);
                 if (stopFlag) {
                     logToTextarea("Stop the proccess success")
                     break

@@ -29,6 +29,8 @@ const restartButton = document.getElementById('restart-button');
 const loaderDownload = document.getElementById('warp-loader');
 const ipsaya = document.getElementById('ipsaya');
 const anchorText =document.getElementById('anchor_text');
+const iphub = document.getElementById('iphub');
+const tablet = document.getElementById('tablet');
 
 document.addEventListener('change', () => {
   if (proxyCheckBox.checked) {
@@ -68,8 +70,9 @@ startButton.addEventListener('click', () => {
   const captchaApiKeys = captchaApiKey.value
   const ipsayas = ipsaya.checked
   const anchorTexts =anchorText.checked
-  
-  ipcRenderer.send('button-click', keywordFilePath, googleSearchs, directLinks, visitAdss,  proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts);
+  const iphubs = iphub.checked
+  const tablets = tablet.checked
+  ipcRenderer.send('button-click', keywordFilePath, googleSearchs, directLinks, visitAdss,  proxyC, proxys, desktops, androids, iphones, randoms, whoers, view, recentPosts, loops, scrollmins, scrollmaxs, scrollminAdss, scrollmaxAdss, captchaApiKeys, ipsayas, anchorTexts, iphubs, tablets);
 });
 stopButton.addEventListener('click', () => {
   if (confirm("Realy want to stop the proccess ?") == true) {
@@ -106,6 +109,8 @@ scrollmaxAds,
 captchaApiKey,
 ipsaya,
 anchorText,
+iphub,
+tablet,
 ]
 
 ipcRenderer.on('run',()=>{
